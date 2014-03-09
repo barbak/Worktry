@@ -1,0 +1,4 @@
+{
+    "duke": {"path": "duke", "git": "git://github.com/OpenImageIO/oiio.git"},
+    "oiio": {"path": "oiio", "git": "https://github.com/mikrosimage/duke.git"}
+}
