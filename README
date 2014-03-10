@@ -1,0 +1,5 @@
+To setup:
+`ln -s .wt/wt.py wt`
+
+To launch shell with corrected python env
+`./wt`
