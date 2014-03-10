@@ -18,6 +18,8 @@ import json
 
 import pprint
 
+import worktry
+
 project_name = 'duke'
 depends = {
     'darwin': {
@@ -32,54 +34,8 @@ envs = {
         "dyld_library_path": ["{oiio_project_dir}/dist/macosx"]
         },
 }
-
-##Fixme Should be in a lib or a template
-worktree_path = os.path.realpath(os.path.dirname(__file__))
-projects = {}
-with open('projects.json') as f:
-    projects = json.loads(f.read())
-
-# Update projects with real path
-for p in projects:
-    if projects[p].has_key('path'):
-        projects[p]['path'] = os.path.join(worktree_path, projects[p]['path'])
-
-# Update envs with project info
 computed_env = {}
-computed_env['program_name'] = __file__
-computed_env['project_name'] = project_name
-computed_env['depends'] = depends
-computed_env['envs'] = envs
-for p in projects:
-    if projects[p].has_key('path'):
-        computed_env["{}_project_dir".format(p)] = os.path.realpath(projects[p]['path'])
 
-computed_env['project_dir'] = computed_env['{}_project_dir'.format(project_name)]
-
-def _exec_cmd(cmd_str):
-    import uuid, datetime
-    
-    d = {
-        'content': cmd_str,
-        'end_time': None,
-        'return_value': None,
-        'start_time': str(datetime.datetime.utcnow()),
-        'type': 'system_command',
-        'uuid': uuid.uuid4().hex,
-        #computed_env
-        #environ
-        }
-    if computed_env.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
-    
-    d['return_value'] = os.system(cmd_str)
-    d['end_time'] = str(datetime.datetime.utcnow())
-    if computed_env.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
-
-##Fixme End common lib
-
-## main commands
 def clean():
     """
     clean action.
@@ -87,9 +43,9 @@ def clean():
     if sys.platform != 'darwin':
         raise NotImplementedError(sys.platform)
 
-    _exec_cmd('cd {project_dir};'
-              'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make clean'\
-                  .format(**computed_env))
+    worktry.exec_cmd('cd {project_dir};'
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make clean'\
+                         .format(**computed_env), computed_env)
 
 def configure():
     """
@@ -98,9 +54,9 @@ def configure():
     if sys.platform != 'darwin':
         raise NotImplementedError(sys.platform)
 
-    _exec_cmd('cd {project_dir};'
-              'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ ./configure'\
-                  .format(**computed_env))
+    worktry.exec_cmd('cd {project_dir};'
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ ./configure'\
+                         .format(**computed_env), computed_env)
 
 def distclean():
     """
@@ -109,9 +65,9 @@ def distclean():
     if sys.platform != 'darwin':
         raise NotImplementedError(sys.platform)
 
-    _exec_cmd('cd {project_dir};'
-              'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make distclean'\
-                  .format(**computed_env))
+    worktry.exec_cmd('cd {project_dir};'
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make distclean'\
+                         .format(**computed_env), computed_env)
 
 def make():
     """
@@ -120,9 +76,9 @@ def make():
     if sys.platform != 'darwin':
         raise NotImplementedError(sys.platform)
 
-    _exec_cmd('cd {project_dir};'
-              'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make -j8'\
-                  .format(**computed_env))
+    worktry.exec_cmd('cd {project_dir};'
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make -j8'\
+                         .format(**computed_env), computed_env)
 
 def make_depends():
     """
@@ -134,8 +90,9 @@ def make_depends():
     #Fixme naive implementation
     #Todo topological sort on depends
     for d in depends['darwin']:
-        _exec_command('./project_{}.py all')
+        worktry.exec_command('./project_{}.py all')
 
+computed_env.update(worktry.compute_project(project_name, depends, envs))
 actions = {
     'all': lambda: (configure(), make()),
     'configure': configure,
