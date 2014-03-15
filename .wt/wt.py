@@ -20,24 +20,29 @@ def init_env():
                                                         wt_dir)
 
 def call_python():
-    import os, subprocess, sys
+    import subprocess, sys
 
-    subprocess.call([sys.executable, '-i', '-c' 
-                     "import os, sys;"
+    subprocess.call([sys.executable, '-i', '-c',
+                     "import os;"
                      "execfile(os.environ['PYTHONSTARTUP']) if os.environ.get('PYTHONSTARTUP') else None;"
-                     "import worktry as wt"],
-                    env=os.environ, shell=True)
+                     "import worktry as wt;"])
 
 def materialize(project_name, settings):
     """
     """
-    import subprocess
-    print project_name, settings
+    import json, subprocess
+
+    project = {'name': project_name}
+    project.update(settings)
+    print json.dumps(project, sort_keys=True)
     init_env()
     if 'git' in settings.keys():
-        subprocess.call(['git', 'clone', settings['git'], settings['path']])
-    else:
-        print "KO"
+        if os.path.exists(settings['path']):
+            print "**WARNING** Project path already exist, skipping ..."
+
+        else:
+            subprocess.call(['git', 'clone', settings['git'], settings['path']])
+
 
 if __name__ == "__main__":
     import json, os, sys
@@ -49,7 +54,6 @@ if __name__ == "__main__":
         projects = json.loads(f.read())
 
     for p in projects:
-        print projects
         materialize(p, projects[p])
 
     init_env()
