@@ -19,7 +19,6 @@ def init_env():
                                                         else "",
                                                         wt_dir)
 
-
 def call_python():
     import os, subprocess, sys
 
@@ -32,8 +31,13 @@ def call_python():
 def materialize(project_name, settings):
     """
     """
+    import subprocess
     print project_name, settings
     init_env()
+    if 'git' in settings.keys():
+        subprocess.call(['git', 'clone', settings['git'], settings['path']])
+    else:
+        print "KO"
 
 if __name__ == "__main__":
     import json, os, sys
@@ -45,6 +49,7 @@ if __name__ == "__main__":
         projects = json.loads(f.read())
 
     for p in projects:
+        print projects
         materialize(p, projects[p])
 
     init_env()
