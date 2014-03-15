@@ -1,0 +1,14 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+# -*- mode: python -*-
+"""
+"""
+
+if __name__ == "__main__":
+    import os, subprocess
+    if not os.path.exists('wt-python'):
+        subprocess.call(['virtualenv', 'wt-python'])
+        subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
+
+    if not os.path.exists('wt'):
+        subprocess.call(['ln', '-s', '.wt/wt.py', 'wt'])
