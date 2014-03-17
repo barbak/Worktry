@@ -6,6 +6,7 @@ Usage:
 Options:
 
 """
+verbose = True
 
 def init_env():
     """
@@ -38,7 +39,9 @@ def call_python(projects):
               '"import os;'
               'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
               'import worktry as wt;'
-              'projects={}"'.format(projects))
+              'wt.verbose={verbose};'
+              'projects=wt.load_projects({projects})"'.format(verbose=verbose,
+                                                              projects=projects))
 
 if __name__ == "__main__":
     import json, os, sys

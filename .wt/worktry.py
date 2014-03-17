@@ -56,6 +56,20 @@ def exec_cmd(cmd_str, computed_env):
     if computed_env.get('verbose', None):
         print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
 
+def load_projects(projects):
+    """
+    Create a projects holder object.
+    Each member correspond to a project script.
+    """
+    projects_holder = type('ProjectsHolder', (object,), {})()
+    for p in projects:
+        setattr(projects_holder, p, __import__('project_{}'.format(p))) 
+        if 'git' in projects[p]:
+            for k in projects[p]:
+                getattr(projects_holder, p).computed_env[k] = projects[p][k]
+ 
+    return projects_holder
+
 def materialize(project_name, settings):
     """
     """
