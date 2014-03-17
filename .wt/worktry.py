@@ -72,7 +72,8 @@ def materialize(project_name, settings):
             subprocess.call(['git', 'clone', settings['git'], settings['path']])
 
 def materialize_all(projects):
-    for p in projects:
-        materialize(p, projects[p])
+    for p in projects.__dict__:
+        if 'git' in projects.__dict__[p].computed_env:
+            materialize(p, projects.__dict__[p].computed_env)
 
 ##Fixme End common lib
