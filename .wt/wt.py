@@ -9,6 +9,7 @@ Options:
 
 def init_env():
     """
+    Initialize the python environment.
     """
     import os
     import subprocess
@@ -28,16 +29,16 @@ def init_env():
 
 def call_python(projects):
     """
-    TODO: Use virtualenv wt-python interpreter
+    Launch the virtualenv python interpreter.
     """
-    import subprocess, sys
+    import os
 
-    subprocess.call([sys.executable, '-i', '-c',
-                     "import os;"
-                     "execfile(os.environ['PYTHONSTARTUP']) if os.environ.get('PYTHONSTARTUP') else None;"
-                     "import worktry as wt;"
-                     "projects={}".format(projects)])
-
+    os.system('source wt-python/bin/activate && '
+              'python -i -c '
+              '"import os;'
+              'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
+              'import worktry as wt;'
+              'projects={}"'.format(projects))
 
 if __name__ == "__main__":
     import json, os, sys

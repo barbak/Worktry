@@ -13,7 +13,8 @@ pip, virtualenv, git, cmake
 # TODO
   * ~~Launch python instead of bash.~~
   * ~~create a python virtual env.~~
-  * Launch the virtualenv instead of the current python interpreter.
+  * ~~Launch the virtualenv instead of the current python interpreter.~~
+  * Launch a shell with python set to the virtualenv interpreter.
   * Use doc opt.
   * Create project_oiio.py
   * Create project_tuttleofx.py
