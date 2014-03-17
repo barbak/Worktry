@@ -56,4 +56,23 @@ def exec_cmd(cmd_str, computed_env):
     if computed_env.get('verbose', None):
         print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
 
+def materialize(project_name, settings):
+    """
+    """
+    import json, subprocess
+
+    project = {'name': project_name}
+    project.update(settings)
+    print json.dumps(project, sort_keys=True)
+    if 'git' in settings.keys():
+        if os.path.exists(settings['path']):
+            print "**WARNING** Project path already exist, skipping ..."
+
+        else:
+            subprocess.call(['git', 'clone', settings['git'], settings['path']])
+
+def materialize_all(projects):
+    for p in projects:
+        materialize(p, projects[p])
+
 ##Fixme End common lib

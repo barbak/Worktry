@@ -2,14 +2,16 @@
 """
 Usage:
   {program_name}
+
+Options:
+
 """
-import git
-import worktry as wt
 
 def init_env():
     """
     """
     import os
+    import subprocess
 
     wt_dir = os.path.abspath(os.path.dirname(__file__))
     if wt_dir not in os.environ.get('PYTHONPATH', ''):
@@ -19,29 +21,22 @@ def init_env():
                                                         else "",
                                                         wt_dir)
 
-def call_python():
+    if not os.path.exists(os.path.join(wt_dir, 'wt-python')):
+        import worktry
+        subprocess.call(['virtualenv', 'wt-python'])
+        subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
+
+def call_python(projects):
+    """
+    TODO: Use virtualenv wt-python interpreter
+    """
     import subprocess, sys
 
     subprocess.call([sys.executable, '-i', '-c',
                      "import os;"
                      "execfile(os.environ['PYTHONSTARTUP']) if os.environ.get('PYTHONSTARTUP') else None;"
-                     "import worktry as wt;"])
-
-def materialize(project_name, settings):
-    """
-    """
-    import json, subprocess
-
-    project = {'name': project_name}
-    project.update(settings)
-    print json.dumps(project, sort_keys=True)
-    init_env()
-    if 'git' in settings.keys():
-        if os.path.exists(settings['path']):
-            print "**WARNING** Project path already exist, skipping ..."
-
-        else:
-            subprocess.call(['git', 'clone', settings['git'], settings['path']])
+                     "import worktry as wt;"
+                     "projects={}".format(projects)])
 
 
 if __name__ == "__main__":
@@ -53,9 +48,6 @@ if __name__ == "__main__":
     with open('projects.json', 'r') as f:
         projects = json.loads(f.read())
 
-    for p in projects:
-        materialize(p, projects[p])
-
     init_env()
-    call_python()
+    call_python(projects)
     print "END"
