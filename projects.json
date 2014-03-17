@@ -1,6 +1,6 @@
 {
-    "duke": 
-        {"path": "project/duke", "git": "git://github.com/OpenImageIO/oiio.git"},
-    "oiio": 
-        {"path": "project/oiio", "git": "https://github.com/mikrosimage/duke.git"}
+    "duke":
+        {"path": "project/duke", "git": "https://github.com/mikrosimage/duke.git"},
+    "oiio":
+        {"path": "project/oiio", "git": "git://github.com/OpenImageIO/oiio.git"}
 }
