@@ -92,6 +92,11 @@ def make_depends():
     for d in depends['darwin']:
         worktry.exec_command('./project_{}.py all')
 
+def materialize():
+    """
+    """
+    worktry.materialize(project_name, computed_env)
+
 computed_env.update(worktry.compute_project(project_name, depends, envs))
 actions = {
     'all': lambda: (configure(), make()),
