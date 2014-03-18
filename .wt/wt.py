@@ -40,8 +40,8 @@ def call_python(projects):
               'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
               'import worktry as wt;'
               'wt.verbose={verbose};'
-              'projects=wt.load_projects({projects})"'.format(verbose=verbose,
-                                                              projects=projects))
+              'projects=wt.load_projects({projects});'
+              'p=projects;"'.format(verbose=verbose, projects=projects))
 
 if __name__ == "__main__":
     import json, os, sys
