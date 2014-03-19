@@ -74,34 +74,17 @@ def load_projects(projects):
 def materialize(project_name, settings):
     """
     """
-    import datetime
-    import json
-    import subprocess
-    import uuid
-
-    if 'git' in settings.keys():
+    if 'git' in settings:
         if os.path.exists(settings['path']):
             print "**WARNING** Project path already exist, skipping ..."
-            return
+        else:
+            cmd_args = ['git', 'clone', settings['git'], settings['path']]
+            exec_cmd(" ".join(cmd_args), settings)
+        cmd_str = ("cd {project_dir};"
+                   "git submodule init;"
+                   "git submodule update;".format(**settings))
+        exec_cmd(cmd_str, settings)
 
-    cmd_args = ['git', 'clone', settings['git'], settings['path']]
-    d = {
-        'content': " ".join(cmd_args),
-        'end_time': None,
-        'return_value': None,
-        'start_time': str(datetime.datetime.utcnow()),
-        'type': 'system_command',
-        'uuid': uuid.uuid4().hex,
-        #computed_env
-        #environ
-        }
-    if settings.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
-
-    d['return_value'] = subprocess.call(cmd_args)
-    d['end_time'] = str(datetime.datetime.utcnow())
-    if settings.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
 
 def materialize_all(projects):
     for p in projects.__dict__:
