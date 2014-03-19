@@ -14,13 +14,15 @@ pip, virtualenv, git, cmake
   * ~~Launch python instead of bash.~~
   * ~~create a python virtual env.~~
   * ~~Launch the virtualenv instead of the current python interpreter.~~
-  * Launch a shell with python set to the virtualenv interpreter.
+  * ~~Launch a shell with python set to the virtualenv interpreter.~~
   * Use doc opt.
-  * Create project_oiio.py
+  * ~~Create project_oiio.py~~
   * Create project_tuttleofx.py
   * Create project_buttleofx.py
   * Create project_urbi.py
   * open shell into a specific project
   * open qt creator with cmake support.
   * update all git projects
+  * ~~wt.pip wrapper~~
+  * brew depends install
   * ...
