@@ -108,6 +108,7 @@ actions = {
 }
 
 computed_env['actions'] = sorted(actions.keys())
+computed_env['program_name'] = __file__ 
 __doc__ = __doc__.format(computed_env=pprint.pformat(computed_env), **computed_env)
 
 if __name__ == "__main__":

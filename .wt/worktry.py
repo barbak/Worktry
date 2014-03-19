@@ -21,7 +21,6 @@ def compute_project(name, depends, envs):
 
     # Update envs with project info
     computed_env = {}
-    computed_env['program_name'] = __file__
     computed_env['project_name'] = name
     computed_env['depends'] = depends
     computed_env['envs'] = envs
