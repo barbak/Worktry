@@ -3,6 +3,8 @@ module worktry
 """
 import json, os
 
+verbose = True if os.environ.get('VERBOSE') else False
+
 def compute_project(name, depends, envs):
     """
     return computed_env.
@@ -36,7 +38,7 @@ def exec_cmd(cmd_str, computed_env):
     Execute cmd_str in the command interpreter.
     """
     import uuid, datetime
-    
+
     d = {
         'content': cmd_str,
         'end_time': None,
@@ -48,12 +50,12 @@ def exec_cmd(cmd_str, computed_env):
         #environ
         }
     if computed_env.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
-    
+        print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
+
     d['return_value'] = os.system(cmd_str)
     d['end_time'] = str(datetime.datetime.utcnow())
     if computed_env.get('verbose', None):
-        print("**VERBOSE** {}\n".format(json.dumps(d, sort_keys=True)))
+        print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
 
 def load_projects(projects):
     """
@@ -62,11 +64,11 @@ def load_projects(projects):
     """
     projects_holder = type('ProjectsHolder', (object,), {})()
     for p in projects:
-        setattr(projects_holder, p, __import__('project_{}'.format(p))) 
+        setattr(projects_holder, p, __import__('project_{}'.format(p)))
         if 'git' in projects[p]:
             for k in projects[p]:
                 getattr(projects_holder, p).computed_env[k] = projects[p][k]
- 
+
     return projects_holder
 
 def materialize(project_name, settings):
