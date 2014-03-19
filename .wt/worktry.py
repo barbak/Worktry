@@ -106,4 +106,8 @@ def materialize_all(projects):
         if 'git' in projects.__dict__[p].computed_env:
             materialize(p, projects.__dict__[p].computed_env)
 
+def pip(arg_str):
+    """
+    """
+    exec_cmd("pip {}".format(arg_str), {'verbose': verbose})
 ##Fixme End common lib
