@@ -2,5 +2,8 @@
     "duke":
         {"path": "project/duke", "git": "https://github.com/mikrosimage/duke.git"},
     "oiio":
-        {"path": "project/oiio", "git": "git://github.com/OpenImageIO/oiio.git"}
+        {"path": "project/oiio", "git": "git://github.com/OpenImageIO/oiio.git"},
+    "tuttleofx":
+        {"path": "project/tuttleofx", "git": "https://github.com/tuttleofx/TuttleOFX.git"}
+
 }
