@@ -9,7 +9,7 @@ def compute_project(name, depends, envs):
     """
     return computed_env.
     """
-    ##Fixme
+    ##Fixme Relative search
     worktree_path = os.path.realpath(os.path.join(os.path.dirname(__file__),
                                      ".."))
     projects = {}
@@ -26,6 +26,7 @@ def compute_project(name, depends, envs):
     computed_env['project_name'] = name
     computed_env['depends'] = depends
     computed_env['envs'] = envs
+    computed_env['verbose'] = verbose
     for p in projects:
         if projects[p].has_key('path'):
             computed_env["{}_project_dir".format(p)] = os.path.realpath(projects[p]['path'])
@@ -39,6 +40,7 @@ def exec_cmd(cmd_str, computed_env):
     """
     import uuid, datetime
 
+    computed_env['verbose'] = verbose
     d = {
         'content': cmd_str,
         'end_time': None,
@@ -49,12 +51,12 @@ def exec_cmd(cmd_str, computed_env):
         #computed_env
         #environ
         }
-    if computed_env.get('verbose', None):
+    if computed_env['verbose']:
         print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
 
     d['return_value'] = os.system(cmd_str)
     d['end_time'] = str(datetime.datetime.utcnow())
-    if computed_env.get('verbose', None):
+    if computed_env['verbose']:
         print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
 
 def load_projects(projects):
@@ -74,6 +76,7 @@ def load_projects(projects):
 def make_depends(depends, computed_env):
     """
     """
+    computed_env['verbose'] = verbose
     #Fixme naive implementation
     #Todo topological sort on depends
     if 'projects' in depends:
@@ -92,6 +95,7 @@ def materialize(project_name, settings, git_submodules=True):
     If git_submodules is True and project_name is materailized from
     a git repository, git submodules will also be checked out.
     """
+    settings['verbose'] = verbose
     if 'git' in settings:
         if os.path.exists(settings['path']):
             print ("**WARNING** Project path '{}' "
