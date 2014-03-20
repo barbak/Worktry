@@ -89,8 +89,17 @@ def make_depends():
 
     #Fixme naive implementation
     #Todo topological sort on depends
-    for d in depends['darwin']:
-        worktry.exec_command('./project_{}.py all')
+    if sys.platform != 'darwin':
+        deps = depends['darwin']
+        if 'projects' in deps:
+            for project_name in deps['projects']:
+                worktry.exec_command('./project_{}.py all'.format(project_name),
+                                     computed_env)
+
+        if 'formulae' in deps:
+            worktry.exec_command('brew install --build-from-source {}'\
+                                     .format(" ".join(deps['formulae'])),
+                                 computed_env)
 
 def materialize():
     """

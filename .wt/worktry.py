@@ -77,6 +77,7 @@ def materialize(project_name, settings):
     if 'git' in settings:
         if os.path.exists(settings['path']):
             print "**WARNING** Project path already exist, skipping ..."
+
         else:
             cmd_args = ['git', 'clone', settings['git'], settings['path']]
             exec_cmd(" ".join(cmd_args), settings)
