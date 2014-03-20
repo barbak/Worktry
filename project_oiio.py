@@ -87,19 +87,8 @@ def make_depends():
     if sys.platform != 'darwin':
         raise NotImplementedError(sys.platform)
 
-    #Fixme naive implementation
-    #Todo topological sort on depends
     if sys.platform != 'darwin':
-        deps = depends['darwin']
-        if 'projects' in deps:
-            for project_name in deps['projects']:
-                worktry.exec_command('./project_{}.py all'.format(project_name),
-                                     computed_env)
-
-        if 'formulae' in deps:
-            worktry.exec_command('brew install --build-from-source {}'\
-                                     .format(" ".join(deps['formulae'])),
-                                 computed_env)
+        worktry.make_depends(depends['darwin'])
 
 def materialize():
     """
@@ -115,7 +104,6 @@ actions = {
     'distclean':distclean,
     'make_depends':make_depends,
 }
-
 computed_env['actions'] = sorted(actions.keys())
 computed_env['program_name'] = __file__ 
 __doc__ = __doc__.format(computed_env=pprint.pformat(computed_env), **computed_env)
