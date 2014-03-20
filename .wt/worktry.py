@@ -71,12 +71,31 @@ def load_projects(projects):
 
     return projects_holder
 
-def materialize(project_name, settings):
+def make_depends(depends, computed_env):
     """
+    """
+    #Fixme naive implementation
+    #Todo topological sort on depends
+    if 'projects' in depends:
+        for project_name in depends['projects']:
+            worktry.exec_command('./project_{}.py all'.format(project_name),
+                                 computed_env)
+
+    if 'formulae' in depends:
+        worktry.exec_command('brew install --build-from-source {}'\
+                                 .format(" ".join(depends['formulae'])),
+                             computed_env)
+
+def materialize(project_name, settings, git_submodules=True):
+    """
+    Materialize project_name depending on settings dict.
+    If git_submodules is True and project_name is materailized from
+    a git repository, git submodules will also be checked out.
     """
     if 'git' in settings:
         if os.path.exists(settings['path']):
-            print "**WARNING** Project path already exist, skipping ..."
+            print ("**WARNING** Project path '{}' "
+                   "already exist, skipping ...".format(settings['path']))
 
         else:
             cmd_args = ['git', 'clone', settings['git'], settings['path']]
@@ -84,7 +103,7 @@ def materialize(project_name, settings):
 
         import git
 
-        if git.Repo(settings['path']).git.submodule():
+        if git_submodules and git.Repo(settings['path']).git.submodule():
             cmd_str = ("cd {};"
                        "git submodule init;"
                        "git submodule update;".format(settings['path']))
