@@ -67,9 +67,8 @@ def load_projects(projects):
     projects_holder = type('ProjectsHolder', (object,), {})()
     for p in projects:
         setattr(projects_holder, p, __import__('project_{}'.format(p)))
-        if 'git' in projects[p]:
-            for k in projects[p]:
-                getattr(projects_holder, p).computed_env[k] = projects[p][k]
+        for k in projects[p]:
+            getattr(projects_holder, p).computed_env[k] = projects[p][k]
 
     return projects_holder
 
