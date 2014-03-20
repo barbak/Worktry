@@ -5,7 +5,13 @@ Inspired by qibuild (without getting stuck into cmake) and brndo (Tuttleofx)
 
 # Requirements
 For the moment, the system should provide the following command.
-pip, virtualenv, git, cmake
+  * `pip`,
+  * `virtualenv`,
+  * `git`,
+  * `cmake`
+
+pip packages:
+  * GitPython
 
 # To setup
   ./boostrap
@@ -25,4 +31,5 @@ pip, virtualenv, git, cmake
   * update all git projects
   * ~~wt.pip wrapper~~
   * brew depends install
+  * ~~init submodule if presents~~
   * ...

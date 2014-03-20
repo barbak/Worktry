@@ -80,10 +80,14 @@ def materialize(project_name, settings):
         else:
             cmd_args = ['git', 'clone', settings['git'], settings['path']]
             exec_cmd(" ".join(cmd_args), settings)
-        cmd_str = ("cd {project_dir};"
-                   "git submodule init;"
-                   "git submodule update;".format(**settings))
-        exec_cmd(cmd_str, settings)
+
+        import git
+
+        if git.Repo(settings['path']).git.submodule():
+            cmd_str = ("cd {};"
+                       "git submodule init;"
+                       "git submodule update;".format(settings['path']))
+            exec_cmd(cmd_str, settings)
 
 
 def materialize_all(projects):
