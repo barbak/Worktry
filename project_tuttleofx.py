@@ -24,6 +24,14 @@ project_name = 'tuttleofx'
 depends = {
     'darwin': {
         'formulae': [
+            'boost',
+            'ffmpeg',
+            'fontconfig',
+            'freeglut',
+            'freetype',
+            'imagemagick',
+            'jpeg',
+            'openjpeg',
             ],
         'projects': ['oiio']
         }
@@ -39,7 +47,7 @@ def clean():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'make clean'.format(**computed_env), computed_env)
+                     'scons -c'.format(**computed_env), computed_env)
 
 def configure():
     """
@@ -54,11 +62,8 @@ def distclean():
     """
     distclean action.
     """
-    if sys.platform != 'darwin':
-        raise NotImplementedError(sys.platform)
+    clean()
 
-    worktry.exec_cmd('cd {project_dir};'
-                     'make realclean'.format(**computed_env), computed_env)
 
 def make():
     """
@@ -68,7 +73,7 @@ def make():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'make -j8'.format(**computed_env), computed_env)
+                     'scons -j8'.format(**computed_env), computed_env)
 
 def make_depends():
     """

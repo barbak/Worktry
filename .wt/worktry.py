@@ -52,12 +52,12 @@ def exec_cmd(cmd_str, computed_env):
         #environ
         }
     if computed_env['verbose']:
-        print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
+        print("*VERBOSE* {}".format(json.dumps(d, sort_keys=True)))
 
     d['return_value'] = os.system(cmd_str)
     d['end_time'] = str(datetime.datetime.utcnow())
     if computed_env['verbose']:
-        print("**VERBOSE** {}".format(json.dumps(d, sort_keys=True)))
+        print("*VERBOSE* {}".format(json.dumps(d, sort_keys=True)))
 
 def load_projects(projects):
     """
