@@ -80,13 +80,13 @@ def make_depends(depends, computed_env):
     #Todo topological sort on depends
     if 'projects' in depends:
         for project_name in depends['projects']:
-            worktry.exec_command('./project_{}.py all'.format(project_name),
-                                 computed_env)
+            exec_cmd('python project_{}.py all'.format(project_name),
+                     computed_env)
 
     if 'formulae' in depends:
-        worktry.exec_command('brew install --build-from-source {}'\
-                                 .format(" ".join(depends['formulae'])),
-                             computed_env)
+        exec_cmd('brew install --build-from-source {}'\
+                     .format(" ".join(depends['formulae'])),
+                 computed_env)
 
 def materialize(project_name, settings, git_submodules=True):
     """
