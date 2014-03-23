@@ -88,7 +88,7 @@ def make_depends():
         raise NotImplementedError(sys.platform)
 
     if sys.platform != 'darwin':
-        worktry.make_depends(depends['darwin'])
+        worktry.make_depends(depends['darwin'], computed_env)
 
 def materialize():
     """
