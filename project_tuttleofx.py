@@ -24,6 +24,7 @@ project_name = 'tuttleofx'
 depends = {
     'darwin': {
         'formulae': [
+            'scons',
             'boost',
             'ffmpeg',
             'fontconfig',
@@ -31,7 +32,11 @@ depends = {
             'freetype',
             'imagemagick',
             'jpeg',
+            'jpeg-turbo',
+            'openexr',
             'openjpeg',
+            'libraw',
+            'swig',
             ],
         'projects': ['oiio']
         }
@@ -47,7 +52,7 @@ def clean():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'scons -c'.format(**computed_env), computed_env)
+                     'TUTTLEOFX={project_dir} scons -c'.format(**computed_env), computed_env)
 
 def configure():
     """
@@ -62,10 +67,13 @@ def distclean():
     """
     distclean action.
     """
-    clean()
+    if sys.platform != 'darwin':
+        raise NotImplementedError(sys.platform)
 
+    worktry.exec_cmd('cd {project_dir};'
+                     'rm -rf .dist'.format(**computed_env), computed_env)
 
-def make():
+def make(arg=''):
     """
     make action.
     """
@@ -73,7 +81,9 @@ def make():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'scons -j8'.format(**computed_env), computed_env)
+                     'TUTTLEOFX={project_dir} scons -j8'.format(**computed_env) +
+                     " {}".format(arg),
+                     computed_env)
 
 def make_depends():
     """
@@ -84,13 +94,19 @@ def make_depends():
 
     #Fixme naive implementation
     #Todo topological sort on depends
-    if sys.platform != 'darwin':
-        worktry.make_depends(depends['darwin'])
+    if sys.platform == 'darwin':
+        worktry.make_depends(depends['darwin'], computed_env)
 
 def materialize():
     """
     """
     worktry.materialize(project_name, computed_env)
+    if sys.platform == 'darwin':
+        if 'formulae' in depends['darwin']:
+            worktry.exec_cmd('brew install --build-from-source {}'\
+                                 .format(" ".join(depends['darwin']['formulae'])),
+                             computed_env)
+
 
 computed_env.update(worktry.compute_project(project_name, depends, envs))
 actions = {
