@@ -4,6 +4,7 @@
     "oiio":
         {"path": "project/oiio", "git": "git://github.com/OpenImageIO/oiio.git"},
     "tuttleofx":
-        {"path": "project/tuttleofx", "git": "https://github.com/tuttleofx/TuttleOFX.git"}
-
+        {"path": "project/tuttleofx", "git": "https://github.com/tuttleofx/TuttleOFX.git"},
+    "boost":
+        {"path": "project/boost", "git": "https://github.com/boostorg/boost.git"}
 }
