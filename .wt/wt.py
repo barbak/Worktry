@@ -36,7 +36,7 @@ def call_python(projects):
     import os
 
     os.system('source wt-python/bin/activate && '
-              'python -i -c '
+              'ipython -i -c '
               '"import os;'
               'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
               'import worktry as wt;'
