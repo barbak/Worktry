@@ -13,8 +13,7 @@ DESCRIPTION
     computed_env
 {computed_env}
 """
-import os, sys
-import json
+import sys
 
 import pprint
 
@@ -23,7 +22,7 @@ import worktry
 project_name = 'duke'
 depends = {
     'darwin': {
-        'projects':["oiio"],
+        'projects':["oiio", "duke_third_party"],
         'formulae':[],
         },
     }
@@ -45,8 +44,8 @@ def clean():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make clean'\
-                         .format(**computed_env), computed_env)
+                     'make clean'
+                     .format(**computed_env), computed_env)
 
 
 def configure():
@@ -57,8 +56,8 @@ def configure():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ ./configure'\
-                         .format(**computed_env), computed_env)
+                     './bootst'
+                     .format(**computed_env), computed_env)
 
 
 def distclean():
@@ -69,8 +68,9 @@ def distclean():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make distclean'\
-                         .format(**computed_env), computed_env)
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make distclean'
+                     .format(**computed_env), computed_env)
+
 
 def make():
     """
@@ -80,8 +80,8 @@ def make():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make -j8'\
-                         .format(**computed_env), computed_env)
+                     'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make -j8'
+                     .format(**computed_env), computed_env)
 
 
 def make_depends():
