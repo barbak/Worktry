@@ -1,6 +1,8 @@
 {
     "duke":
         {"path": "project/duke", "git": "https://github.com/mikrosimage/duke.git"},
+    "duke_third_party":
+        {"path": "project/duke/third_party"},
     "oiio":
         {"path": "project/oiio", "git": "git://github.com/OpenImageIO/oiio.git"},
     "tuttleofx":
