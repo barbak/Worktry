@@ -5,6 +5,7 @@ import json, os
 
 verbose = True if os.environ.get('VERBOSE') else False
 
+
 def compute_project(name, depends, envs):
     """
     return computed_env.
@@ -84,13 +85,22 @@ def make_depends(depends, computed_env):
     #Todo topological sort on depends
     if 'projects' in depends:
         for project_name in depends['projects']:
-            exec_cmd('python project_{}.py all'.format(project_name),
+            tokens = project_name.split('.')
+            project_name = tokens[0]
+            action = tokens[1] if len(tokens) == 2 else 'all'
+            # exec_cmd('python project_{}.py all'.format(project_name),
+            #          computed_env)
+            exec_cmd('python project_{}.py {}'.format(project_name, action),
                      computed_env)
 
     if 'formulae' in depends:
-        exec_cmd('brew install --build-from-source {}'\
-                     .format(" ".join(depends['formulae'])),
-                 computed_env)
+        exec_cmd(
+            'brew install --build-from-source {}'.format(
+                " ".join(depends['formulae'])
+            ),
+            computed_env
+        )
+
 
 def materialize(project_name, settings, git_submodules=True):
     """
