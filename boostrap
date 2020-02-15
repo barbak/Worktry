@@ -9,6 +9,8 @@ if __name__ == "__main__":
     if not os.path.exists('wt-python'):
         subprocess.call(['virtualenv', 'wt-python'])
         subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
+        # subprocess.call(['virtualenv', 'wt-python', '--relocatable']) # pip
+        subprocess.call("./wt-python/bin/python -m pip install GitPython IPython".split())
 
     if not os.path.exists('wt'):
         subprocess.call(['ln', '-s', '.wt/wt.py', 'wt'])

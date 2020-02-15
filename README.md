@@ -10,9 +10,6 @@ For the moment, the system should provide the following command.
   * `git`,
   * `cmake`
 
-pip packages:
-  * GitPython
-
 # To setup
   ./boostrap
 
