@@ -8,6 +8,7 @@ Options:
 """
 verbose = True
 
+
 def init_env():
     """
     Initialize the python environment.
@@ -18,8 +19,7 @@ def init_env():
     wt_dir = os.path.abspath(os.path.dirname(__file__))
     if wt_dir not in os.environ.get('PYTHONPATH', ''):
         os.environ['PYTHONPATH'] = "{}{}{}/.wt" .format(os.environ.get('PYTHONPATH', ''),
-                                                        ':'
-                                                        if os.environ.get('PYTHONPATH', '')
+                                                        ':' if os.environ.get('PYTHONPATH', False)
                                                         else "",
                                                         wt_dir)
 
@@ -27,6 +27,7 @@ def init_env():
         import worktry
         worktry.exec_cmd("virtualenv wt-python", {'verbose': verbose})
         worktry.exec_cmd("virtualenv wt-python --relocatable", {'verbose': verbose})
+
 
 def call_python(projects):
     """
@@ -43,6 +44,7 @@ def call_python(projects):
               'projects=wt.load_projects({projects});'
               'p=projects;"'.format(verbose=verbose, projects=projects))
 
+
 if __name__ == "__main__":
     import json, os, sys
     
@@ -54,4 +56,4 @@ if __name__ == "__main__":
 
     init_env()
     call_python(projects)
-    print "END"
+    print("END")

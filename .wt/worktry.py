@@ -10,25 +10,27 @@ def compute_project(name, depends, envs):
     return computed_env.
     """
     ##Fixme Relative search
-    worktree_path = os.path.realpath(os.path.join(os.path.dirname(__file__),
-                                     ".."))
+    worktree_path = os.path.realpath(
+        os.path.join(os.path.dirname(__file__), "..")
+    )
     projects = {}
     with open(os.path.join(worktree_path, 'projects.json')) as f:
         projects = json.loads(f.read())
 
     # Update projects with real path
     for p in projects:
-        if projects[p].has_key('path'):
+        if 'path' in projects[p]:
             projects[p]['path'] = os.path.join(worktree_path, projects[p]['path'])
 
     # Update envs with project info
-    computed_env = {}
-    computed_env['project_name'] = name
-    computed_env['depends'] = depends
-    computed_env['envs'] = envs
-    computed_env['verbose'] = verbose
+    computed_env = {
+        'project_name': name,
+        'depends': depends,
+        'envs': envs,
+        'verbose': verbose
+    }
     for p in projects:
-        if projects[p].has_key('path'):
+        if 'path' in projects[p]:
             computed_env["{}_project_dir".format(p)] = os.path.realpath(projects[p]['path'])
 
     computed_env['project_dir'] = computed_env['{}_project_dir'.format(name)]
@@ -50,7 +52,7 @@ def exec_cmd(cmd_str, computed_env):
         'uuid': uuid.uuid4().hex,
         #computed_env
         #environ
-        }
+    }
     if computed_env['verbose']:
         print("*VERBOSE* {}".format(json.dumps(d, sort_keys=True)))
 
@@ -58,6 +60,7 @@ def exec_cmd(cmd_str, computed_env):
     d['end_time'] = str(datetime.datetime.utcnow())
     if computed_env['verbose']:
         print("*VERBOSE* {}".format(json.dumps(d, sort_keys=True)))
+
 
 def load_projects(projects):
     """
@@ -71,6 +74,7 @@ def load_projects(projects):
             getattr(projects_holder, p).computed_env[k] = projects[p][k]
 
     return projects_holder
+
 
 def make_depends(depends, computed_env):
     """

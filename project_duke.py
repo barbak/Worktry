@@ -36,6 +36,7 @@ envs = {
 }
 computed_env = {}
 
+
 def clean():
     """
     clean action.
@@ -47,6 +48,7 @@ def clean():
                      'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make clean'\
                          .format(**computed_env), computed_env)
 
+
 def configure():
     """
     configure action.
@@ -57,6 +59,7 @@ def configure():
     worktry.exec_cmd('cd {project_dir};'
                      'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ ./configure'\
                          .format(**computed_env), computed_env)
+
 
 def distclean():
     """
@@ -80,6 +83,7 @@ def make():
                      'OPENIMAGEIO_ROOT_DIR={oiio_project_dir}/dist/macosx/ make -j8'\
                          .format(**computed_env), computed_env)
 
+
 def make_depends():
     """
     make_depends action.
@@ -90,10 +94,12 @@ def make_depends():
     if sys.platform != 'darwin':
         worktry.make_depends(depends['darwin'], computed_env)
 
+
 def materialize():
     """
     """
     worktry.materialize(project_name, computed_env)
+
 
 computed_env.update(worktry.compute_project(project_name, depends, envs))
 actions = {
@@ -110,7 +116,7 @@ __doc__ = __doc__.format(computed_env=pprint.pformat(computed_env), **computed_e
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or '-h' in sys.argv:
-        print __doc__
+        print(__doc__)
         sys.exit(0)
 
     action = sys.argv[1]

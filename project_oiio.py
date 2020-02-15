@@ -110,7 +110,7 @@ __doc__ = __doc__.format(computed_env=pprint.pformat(computed_env), **computed_e
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or '-h' in sys.argv:
-        print __doc__
+        print(__doc__)
         sys.exit(0)
 
     action = sys.argv[1]
