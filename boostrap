@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     if not os.path.exists('wt'):
         if os_name in ['Darwin']:
-            subprocess.call(['ln', '-s' '.wt/wt.py', 'wt'])
+            subprocess.call(['ln', '-s', '.wt/wt.py', 'wt'])
 
     if os_name == 'Windows':
         with open('wt.bat', 'w') as f:
