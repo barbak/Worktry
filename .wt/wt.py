@@ -23,11 +23,6 @@ def init_env():
                                                         else "",
                                                         wt_dir)
 
-    if not os.path.exists(os.path.join(wt_dir, 'wt-python')):
-        import worktry
-        worktry.exec_cmd("virtualenv wt-python", {'verbose': verbose})
-        worktry.exec_cmd("virtualenv wt-python --relocatable", {'verbose': verbose})
-
 
 def call_python(projects):
     """
