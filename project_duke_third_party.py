@@ -146,7 +146,7 @@ def make():
         raise NotImplementedError(sys.platform)
 
     worktry.exec_cmd('cd {project_dir};'
-                     'make -j8'.format(**computed_env), computed_env)
+                     'make -j4'.format(**computed_env), computed_env)
 
 
 def make_depends():

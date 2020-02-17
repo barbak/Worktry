@@ -18,6 +18,10 @@ class LogContextManager(object):
 def compute_project(name, depends, envs):
     """
     return computed_env.
+    TODO
+    # darwin
+    # (wt-python) $ sysctl -n hw.ncpu
+    # 4
     """
     ##Fixme Relative search
     worktree_path = os.path.realpath(
@@ -41,7 +45,14 @@ def compute_project(name, depends, envs):
     }
     for p in projects:
         if 'path' in projects[p]:
-            computed_env["{}_project_dir".format(p)] = os.path.realpath(projects[p]['path'])
+            computed_env["{}_project_dir".format(p)] = projects[p]['path']
+            if p == name:
+                computed_env['path'] = projects[p]['path']
+
+        if 'git' in projects[p]:
+            computed_env["{}_git_url".format(p)] = projects[p]['git']
+            if p == name:
+                computed_env['git'] = projects[p]['git']
 
     computed_env['project_dir'] = computed_env['{}_project_dir'.format(name)]
     return computed_env
@@ -134,8 +145,6 @@ def make_depends(depends, computed_env):
             tokens = project_name.split('.')
             project_name = tokens[0]
             action = tokens[1] if len(tokens) == 2 else 'all'
-            # exec_cmd('python project_{}.py all'.format(project_name),
-            #          computed_env)
             exec_cmd('python project_{}.py {}'.format(project_name, action),
                      computed_env)
 
