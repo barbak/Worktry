@@ -6,6 +6,9 @@ import json, os
 verbose = True if os.environ.get('VERBOSE') else False
 
 
+class LogContextManager(object):
+    pass
+
 def compute_project(name, depends, envs):
     """
     return computed_env.
@@ -37,9 +40,25 @@ def compute_project(name, depends, envs):
     computed_env['project_dir'] = computed_env['{}_project_dir'.format(name)]
     return computed_env
 
+
+def download_to(url, urn, computed_env):
+    """
+    """
+    from pprint import pprint
+    print("*"*42)
+    pprint(computed_env)
+    print(url, urn)
+    # if os.path.exists(urn) is False:
+    #     exec_cmd(f"curl -L -o {urn} {url}", computed_env)
+
+
 def exec_cmd(cmd_str, computed_env):
     """
     Execute cmd_str in the command interpreter.
+    TODO
+        use subprocess
+        use computed_env as the environment execution
+        try / catch exception
     """
     import uuid, datetime
 
@@ -61,6 +80,27 @@ def exec_cmd(cmd_str, computed_env):
     d['end_time'] = str(datetime.datetime.utcnow())
     if computed_env['verbose']:
         print("*VERBOSE* {}".format(json.dumps(d, sort_keys=True)))
+
+
+def download_to(name, dirname, computed_env):
+    """
+    TODO usse tarfile and zipfile instead of exec cmd
+    """
+    if os.path.exists(dirname) is True:
+        raise RuntimeError(f"Destination dir {repr(dirname)} already exists.")
+
+    print("TODO worktry.extract_to(urn, dirname, computed_env)")
+    if os.uname().sysname == 'Darwin':
+        if name.endswith('gz'):
+            exec_cmd(f"tar zxvf {name}")
+
+        elif name.endswith('zip'):
+            exec_cmd(f"unzip x {name}")
+
+    if os.path.exists(dirname) is False:
+        with LogContextManager(verbose):
+        print("TODO os.rename(worktry.get_archive_root_dirname(urn), dirname)", urn, dirname)
+        os.rename(get_archive_root_dirname(name), dirname)
 
 
 def load_projects(projects):
@@ -132,8 +172,42 @@ def materialize_all(projects):
         if 'git' in projects.__dict__[p].computed_env:
             materialize(p, projects.__dict__[p].computed_env)
 
+
 def pip(arg_str):
     """
     """
     exec_cmd("pip {}".format(arg_str), {'verbose': verbose})
 ##Fixme End common lib
+
+### GETTERS ?
+import tarfile
+import zipfile
+
+
+def get_zipfile_root_dirname(filename):
+    if zipfile.is_zipfile(filename) is False:
+        raise RuntimeError(f"File {repr(filename)} is not a zipfile.")
+
+    return list(
+        {f.split('/')[0] for f in zipfile.ZipFile(filename).namelist()}
+    )[0]
+
+
+def get_tarfile_root_dirname(filename):
+    if tarfile.is_tarfile(filename) is False:
+        raise RuntimeError(f"File {repr(filename)} is not a tarfile.")
+
+    with tarfile.open(filename) as tf:
+        return list(
+            {f.split('/')[0] for f in tf.getnames()}
+        )[0]
+
+
+def get_archive_root_dirname(filename):
+    if tarfile.is_tarfile(filename) is True:
+        return get_tarfile_root_dirname(filename)
+
+    if zipfile.is_zipfile(filename) is True:
+        return get_zipfile_root_dirname(filename)
+
+    raise RuntimeError(f"File {repr(filename)} is not handled.")

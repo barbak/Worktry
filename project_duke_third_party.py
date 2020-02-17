@@ -180,10 +180,11 @@ def download_archives():
 
 def extract_archives():
     def extract_archive(url, urn, dirname):
-        print("TODO worktry.extract_to(urn, dirname, computed_env)")
-        # worktry.exec_cmd("")
-        if os.path.exists(dirname) is False:
-            print("TODO os.rename(worktry.get_archive_root_dirname(urn), dirname)", urn, dirname)
+        worktry.extract_to(urn, dirname, computed_env)
+        # print("TODO worktry.extract_to(urn, dirname, computed_env)")
+        # # worktry.exec_cmd("")
+        # if os.path.exists(dirname) is False:
+        #     print("TODO os.rename(worktry.get_archive_root_dirname(urn), dirname)", urn, dirname)
 
     _run_func_on_depency(extract_archive)
 
