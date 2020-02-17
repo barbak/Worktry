@@ -29,15 +29,19 @@ def call_python(projects):
     Launch the virtualenv python interpreter.
     """
     import os
+    import platform
 
-    os.system('source wt-python/bin/activate && '
-              'ipython -i -c '
-              '"import os;'
-              'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
-              'import worktry as wt;'
-              'wt.verbose={verbose};'
-              'projects=wt.load_projects({projects});'
-              'p=projects;"'.format(verbose=verbose, projects=projects))
+    os_name = platform.system()
+    os.system(
+        ('source wt-python/bin/activate && ' if os_name != 'Windows' else '') +
+        '{}ipython -i -c '.format('wt-python/Scripts/' if os_name == 'Windows' else '') +
+        '"import os;'
+        'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
+        'import worktry as wt;'
+        'wt.verbose={verbose};'
+        'projects=wt.load_projects({projects});'
+        'p=projects;"'.format(verbose=verbose, projects=projects)
+    )
 
 
 if __name__ == "__main__":
