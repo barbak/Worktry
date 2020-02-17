@@ -106,12 +106,13 @@ actions = {
     'all': lambda: (configure(), make()),
     'configure': configure,
     'make': make,
-    'clean':clean,
-    'distclean':distclean,
-    'make_depends':make_depends,
+    'clean': clean,
+    'distclean': distclean,
+    'make_depends': make_depends,
+    'materialize': materialize,
 }
 computed_env['actions'] = sorted(actions.keys())
-computed_env['program_name'] = __file__ 
+computed_env['program_name'] = __file__
 __doc__ = __doc__.format(computed_env=pprint.pformat(computed_env), **computed_env)
 
 if __name__ == "__main__":

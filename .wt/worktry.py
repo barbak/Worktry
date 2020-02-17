@@ -1,7 +1,13 @@
 """
 module worktry
 """
-import json, os
+import json
+import os
+
+from pprint import (
+    pformat,
+    pprint,
+)
 
 verbose = True if os.environ.get('VERBOSE') else False
 
@@ -98,9 +104,9 @@ def download_to(name, dirname, computed_env):
             exec_cmd(f"unzip x {name}")
 
     if os.path.exists(dirname) is False:
-        with LogContextManager(verbose):
-        print("TODO os.rename(worktry.get_archive_root_dirname(urn), dirname)", urn, dirname)
-        os.rename(get_archive_root_dirname(name), dirname)
+        # with LogContextManager(verbose):
+        print("TODO os.rename(worktry.get_archive_root_dirname(urn), dirname)", name, dirname)
+        # os.rename(get_archive_root_dirname(name), dirname)
 
 
 def load_projects(projects):
@@ -151,8 +157,8 @@ def materialize(project_name, settings, git_submodules=True):
     settings['verbose'] = verbose
     if 'git' in settings:
         if os.path.exists(settings['path']):
-            print ("**WARNING** Project path '{}' "
-                   "already exist, skipping ...".format(settings['path']))
+            print("**WARNING** Project path '{}' "
+                  "already exist, skipping ...".format(settings['path']))
 
         else:
             cmd_args = ['git', 'clone', settings['git'], settings['path']]
@@ -177,6 +183,7 @@ def pip(arg_str):
     """
     """
     exec_cmd("pip {}".format(arg_str), {'verbose': verbose})
+
 ##Fixme End common lib
 
 ### GETTERS ?
