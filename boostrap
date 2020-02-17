@@ -5,12 +5,39 @@
 """
 
 if __name__ == "__main__":
-    import os, subprocess
-    if not os.path.exists('wt-python'):
+    import platform
+    import os
+    import subprocess
+
+    pip_packages = [
+        'GitPython',
+        'IPython',
+    ]
+    os_name = platform.system()
+    if not os.path.exists('wt-python'): # Darwin / Linux
         subprocess.call(['virtualenv', 'wt-python'])
         subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
-        # subprocess.call(['virtualenv', 'wt-python', '--relocatable']) # pip
-        subprocess.call("./wt-python/bin/python -m pip install GitPython IPython".split())
+        subprocess.call(
+            "./wt-python/bin/python -m pip install".split() +
+            pip_packages
+        )
+
+    if os_name == 'Windows':
+        f = open('wt-python/python37._pth');
+        content = f.readlines()
+        f.close()
+        f = open('wt-python/python37._pth', 'w')
+        f.write("".join(content[0:-1] + ['import site\n']))
+        f.close()
+        subprocess.call(
+            "./wt-python/python -m pip install".split() + pip_packages
+        )
 
     if not os.path.exists('wt'):
-        subprocess.call(['ln', '-s', '.wt/wt.py', 'wt'])
+        if os_name in ['Darwin']:
+            subprocess.call(['ln', '-s' '.wt/wt.py', 'wt'])
+
+    if os_name == 'Windows':
+        with open('wt.bat', 'w') as f:
+            # TODO a wt.bat script ??
+            f.write("")
