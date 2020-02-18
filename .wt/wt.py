@@ -17,13 +17,12 @@ def init_env():
     import platform
     import subprocess
 
-    wt_dir = os.path.realpath(os.path.abspath(os.path.dirname(__file__)))
-    if platform.system() != 'Windows' and wt_dir not in sys.path:
-        if wt_dir not in os.environ.get('PYTHONPATH', ''):
-            os.environ['PYTHONPATH'] = "{}{}{}" .format(os.environ.get('PYTHONPATH', ''),
-                                                        ':' if os.environ.get('PYTHONPATH', False)
-                                                        else "",
-                                                        wt_dir)
+    wt_dir = os.path.join(os.path.realpath(os.path.dirname(__file__)), '.wt')
+    if platform.system() != 'Windows' and wt_dir not in os.environ.get('PYTHONPATH', ''):
+        os.environ['PYTHONPATH'] = "{}{}{}" .format(os.environ.get('PYTHONPATH', ''),
+                                                    ':' if os.environ.get('PYTHONPATH', False)
+                                                    else "",
+                                                    wt_dir)
 
 
 def call_python(projects):
