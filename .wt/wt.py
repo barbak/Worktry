@@ -14,11 +14,13 @@ def init_env():
     Initialize the python environment.
     """
     import os
+    import platform
     import subprocess
 
-    wt_dir = os.path.abspath(os.path.dirname(__file__))
-    if wt_dir not in os.environ.get('PYTHONPATH', ''):
-        os.environ['PYTHONPATH'] = "{}{}{}/.wt" .format(os.environ.get('PYTHONPATH', ''),
+    wt_dir = os.path.realpath(os.path.abspath(os.path.dirname(__file__)))
+    if platform.system() != 'Windows' and wt_dir not in sys.path:
+        if wt_dir not in os.environ.get('PYTHONPATH', ''):
+            os.environ['PYTHONPATH'] = "{}{}{}" .format(os.environ.get('PYTHONPATH', ''),
                                                         ':' if os.environ.get('PYTHONPATH', False)
                                                         else "",
                                                         wt_dir)
@@ -32,9 +34,9 @@ def call_python(projects):
     import platform
 
     os_name = platform.system()
-    os.system(
+    return os.system(
         ('source wt-python/bin/activate && ' if os_name != 'Windows' else '') +
-        '{}ipython -i -c '.format('wt-python/Scripts/' if os_name == 'Windows' else '') +
+        '{}ipython -i -c '.format('wt-python\\Scripts\\' if os_name == 'Windows' else '') +
         '"import os;'
         'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
         'import worktry as wt;'

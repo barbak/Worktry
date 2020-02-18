@@ -27,7 +27,9 @@ if __name__ == "__main__":
         content = f.readlines()
         f.close()
         f = open('wt-python/python37._pth', 'w')
-        f.write("".join(content[0:-1] + ['import site\n']))
+        f.write("".join(content[0:2]))
+        f.write('../.wt\n')
+        f.write("".join(content[2:-1] + ['import site\n']))
         f.close()
         subprocess.call(
             "./wt-python/python -m pip install".split() + pip_packages
@@ -36,8 +38,3 @@ if __name__ == "__main__":
     if not os.path.exists('wt'):
         if os_name in ['Darwin']:
             subprocess.call(['ln', '-s', '.wt/wt.py', 'wt'])
-
-    if os_name == 'Windows':
-        with open('wt.bat', 'w') as f:
-            # TODO a wt.bat script ??
-            f.write("")
