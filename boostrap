@@ -14,16 +14,8 @@ if __name__ == "__main__":
         'IPython',
     ]
     os_name = platform.system()
-    if not os.path.exists('wt-python'): # Darwin / Linux
-        subprocess.call(['virtualenv', 'wt-python'])
-        subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
-        subprocess.call(
-            "./wt-python/bin/python -m pip install".split() +
-            pip_packages
-        )
-
     if os_name == 'Windows':
-        f = open('wt-python/python37._pth');
+        f = open('wt-python/python37._pth')
         content = f.readlines()
         f.close()
         f = open('wt-python/python37._pth', 'w')
@@ -32,7 +24,17 @@ if __name__ == "__main__":
         f.write("".join(content[2:-1] + ['import site\n']))
         f.close()
         subprocess.call(
-            "./wt-python/python -m pip install".split() + pip_packages
+            "./wt-python/python -m pip install --no-warn-script-location"
+            ""
+            "".split() + pip_packages
+        )
+
+    elif not os.path.exists('wt-python'): # Darwin / Linux
+        subprocess.call(['virtualenv', 'wt-python'])
+        subprocess.call(['virtualenv', 'wt-python', '--relocatable'])
+        subprocess.call(
+            "./wt-python/bin/python -m pip install --no-warn-script-location".split() +
+            pip_packages
         )
 
     if not os.path.exists('wt'):

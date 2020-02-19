@@ -39,7 +39,7 @@ start /wait ^
     wt-python\python.exe getpip.py --no-warn-script-location
 echo Done.
 
-echo | set /p="Executing python boostrap script ... "
+echo Executing python boostrap script ...
 wt-python\python boostrap
 echo Done.
 
