@@ -165,21 +165,23 @@ def materialize(project_name, settings, git_submodules=True):
     """
     settings['verbose'] = verbose
     if 'git' in settings:
-        if os.path.exists(settings['path']):
-            print("**WARNING** Project path '{}' "
-                  "already exist, skipping ...".format(settings['path']))
+        git_clone_from_pygit2(project_name, settings, git_submodules)
 
-        else:
-            cmd_args = ['git', 'clone', settings['git'], settings['path']]
-            exec_cmd(" ".join(cmd_args), settings)
-
-        import git
-
-        if git_submodules and git.Repo(settings['path']).git.submodule():
-            cmd_str = ("cd {};"
-                       "git submodule init;"
-                       "git submodule update;".format(settings['path']))
-            exec_cmd(cmd_str, settings)
+        # if os.path.exists(settings['path']):
+        #     print("**WARNING** Project path '{}' "
+        #           "already exist, skipping ...".format(settings['path']))
+        #
+        # else:
+        #     cmd_args = ['git', 'clone', settings['git'], settings['path']]
+        #     exec_cmd(" ".join(cmd_args), settings)
+        #
+        # import git
+        #
+        # if git_submodules and git.Repo(settings['path']).git.submodule():
+        #     cmd_str = ("cd {};"
+        #                "git submodule init;"
+        #                "git submodule update;".format(settings['path']))
+        #     exec_cmd(cmd_str, settings)
 
 
 def materialize_all(projects):
@@ -227,3 +229,95 @@ def get_archive_root_dirname(filename):
         return get_zipfile_root_dirname(filename)
 
     raise RuntimeError(f"File {repr(filename)} is not handled.")
+
+### /GETTERS
+
+### GIT UTILS
+def git_clone_from_pygit2(project_name, settings, git_submodules=True):
+    """
+    TODO
+        SUBMODULE FLAG
+        EVENT DICT LOG - VERBOSE
+        BETTER CALLBAKS PRINTING
+    """
+
+    import pygit2
+
+    class MyRemoteCallbacks(pygit2.RemoteCallbacks):
+
+        username = None
+        password = None
+
+        def credentials(self, url, username_from_url, allowed_types):
+            """
+            *****
+            """
+            import getpass
+
+            print(url, username_from_url, allowed_types)
+            if not self.username:
+                self.username = input(f"User name for '{url}' ? ")
+                self.password = getpass.getpass(f"Password for '{url}' ? ")
+
+            return pygit2.UserPass(self.username, self.password)
+
+        def transfer_progress(self, stats):
+            """Transfer progress callback
+
+            Override with your own function to report transfer progress.
+
+            :param TransferProgress stats: The progress up to now
+
+            self.total_objects = tp.total_objects
+            Total number of objects to download
+
+            self.indexed_objects = tp.indexed_objects
+            Objects which have been indexed
+
+            self.received_objects = tp.received_objects
+            Objects which have been received up to now
+
+            self.local_objects = tp.local_objects
+            Local objects which were used to fix the thin pack
+
+            self.total_deltas = tp.total_deltas
+            Total number of deltas in the pack
+
+            self.indexed_deltas = tp.indexed_deltas
+            Deltas which have been indexed
+
+            self.received_bytes = tp.received_bytes
+            Number of bytes received up to now
+            """
+            # def clear_current_terminal_line():
+            #     print(f"\r{ ' ' * os.get_terminal_size().columns}\r", end='')
+            #     sys.stdout.flush()
+            #
+
+            import sys
+            clear_current_terminal_line = lambda: print(f"\r{ ' ' * os.get_terminal_size().columns}\r", end='')
+            clear_current_terminal_line()
+            print(f"Stats: {stats.total_objects}\t{stats.indexed_objects}\t"
+                  f"{stats.received_objects}\t{stats.local_objects}\t"
+                  f"{stats.total_deltas}\t{stats.indexed_deltas}\t{stats.received_bytes}",
+                  end='')
+            sys.stdout.flush()
+
+    pygit2_remote_callbacks = MyRemoteCallbacks()
+    print(f"Cloning {repr(project_name)} with pygit2")
+    destination = settings['path']
+    git_url = settings['git']
+    if os.path.exists(destination):
+        print(f"Directory '{destination}' already exist.")
+
+    else:
+        print(f"Cloning {git_url} to {destination} ...")
+        r = pygit2.clone_repository(git_url, destination, callbacks=pygit2_remote_callbacks)
+        if git_submodules is True and r.listall_submodules() != []:
+            print("Submodules fetching.")
+            r.update_submodules(init=True, callbacks=pygit2_remote_callbacks)
+
+        print(f"\n{r}")
+        print("OK")
+
+### /GIT UTILS

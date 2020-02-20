@@ -10,7 +10,7 @@ if __name__ == "__main__":
     import subprocess
 
     pip_packages = [
-        'GitPython',
+        'pygit2',
         'IPython',
     ]
     os_name = platform.system()
