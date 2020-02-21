@@ -27,15 +27,18 @@ def init_env():
 
 def call_python(projects):
     """
-    Launch the virtualenv python interpreter.
+    Launch the python virtualenv python interpreter or the embedded on Windows.
     """
     import os
     import platform
 
     os_name = platform.system()
-    return os.system(
+    cmd_script = (
         ('source wt-python/bin/activate && ' if os_name != 'Windows' else '') +
-        '{}ipython -i -c '.format('wt-python\\Scripts\\' if os_name == 'Windows' else '') +
+        ('{}ipython '.format('wt-python\\Scripts\\' if os_name == 'Windows' else '') +
+        ('  --no-confirm-exit' if '-nc' in sys.argv else '') +
+        '   -i ' +
+        '   -c ') +
         '"import os;'
         'execfile(os.environ[\'PYTHONSTARTUP\']) if os.environ.get(\'PYTHONSTARTUP\') else None;'
         'import worktry as wt;'
@@ -43,6 +46,8 @@ def call_python(projects):
         'projects=wt.load_projects({projects});'
         'p=projects;"'.format(verbose=verbose, projects=projects)
     )
+    print(cmd_script)
+    return os.system(cmd_script)
 
 
 if __name__ == "__main__":

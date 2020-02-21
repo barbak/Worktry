@@ -297,10 +297,10 @@ def git_clone_from_pygit2(project_name, settings, git_submodules=True):
             import sys
             clear_current_terminal_line = lambda: print(f"\r{ ' ' * os.get_terminal_size().columns}\r", end='')
             clear_current_terminal_line()
-            print(f"Stats: {stats.total_objects}\t{stats.indexed_objects}\t"
+            sys.stdout.write(f"Stats: {stats.total_objects}\t{stats.indexed_objects}\t"
                   f"{stats.received_objects}\t{stats.local_objects}\t"
                   f"{stats.total_deltas}\t{stats.indexed_deltas}\t{stats.received_bytes}",
-                  end='')
+                  )
             sys.stdout.flush()
 
     pygit2_remote_callbacks = MyRemoteCallbacks()
@@ -314,7 +314,7 @@ def git_clone_from_pygit2(project_name, settings, git_submodules=True):
         print(f"Cloning {git_url} to {destination} ...")
         r = pygit2.clone_repository(git_url, destination, callbacks=pygit2_remote_callbacks)
         if git_submodules is True and r.listall_submodules() != []:
-            print("Submodules fetching.")
+            print("\nSubmodules fetching.")
             r.update_submodules(init=True, callbacks=pygit2_remote_callbacks)
 
         print(f"\n{r}")
