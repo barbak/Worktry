@@ -34,9 +34,8 @@ echo | set /p="Unzipping Python ... "
 powershell -Command Expand-Archive python-3.7.4-embed-win32.zip -DestinationPath wt-python
 echo Done.
 
-echo | set /p="Installing pip ... "
-start /wait ^
-    wt-python\python.exe getpip.py --no-warn-script-location
+echo Installing pip ...
+wt-python\python.exe getpip.py --no-warn-script-location
 echo Done.
 
 echo Executing python boostrap script ...
